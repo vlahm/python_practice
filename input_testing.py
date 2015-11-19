@@ -7,15 +7,15 @@ import tty, termios
 
 def fart(q):
     while True:
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            i, o, e = select([sys.stdin.fileno()], [], [], 4)
-            tty.setraw(i)
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        q.put(ch)
+       # fd = sys.stdin.fileno()
+       # old_settings = termios.tcgetattr(fd)
+       # try:
+       i, o, e = select([sys.stdin], [], [], 4)
+       #     tty.setraw(i)
+       #     ch = sys.stdin.read(1)
+       # finally:
+       #     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+       q.put(i)
 
 def chili(q):
     while True:
