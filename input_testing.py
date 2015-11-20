@@ -5,6 +5,21 @@ import sys
 import thread
 import tty, termios
 
+class _GetchUnix:
+    def __init__(self):
+        import tty, sys
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
 def fart(q):
     while True:
        # fd = sys.stdin.fileno()
@@ -15,13 +30,13 @@ def fart(q):
        #     ch = sys.stdin.read(1)
        # finally:
        #     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-       q.put(i)
+      # q.put(i)
 
 def chili(q):
     while True:
-        x = q.get()
+       # x = q.get()
         print 'you said' + sys.stdin.readline() 
-        q.task_done()
+       # q.task_done()
 
 q = Queue(maxsize=0)
 thread1 = Thread(target=fart, args=(q,))
