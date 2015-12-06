@@ -56,7 +56,10 @@ def initializer():
     
 def commencer(q):
     lines = initializer()
+#    for i in range(10):
     while True:
+ #       if i == 6:
+  #          break
         time.sleep(0.3)
         lines[0] = lines[1] #line9 = line8
 
@@ -70,17 +73,22 @@ def commencer(q):
 
         temp6 = list(lines[3])
         temp7b = list(lines[2])
-        direction = q.get()
-        print "this is %r " % direction
-        V_pos = temp7b.index('V')
-        temp7b = temp6
-        if V_pos > 0 and direction == 7:
-            temp7b[V_pos-1] = 'V'
-        elif V_pos < 11 and direction == 8:
-            temp7b[V_pos+1] = 'V'
-        else:
-            temp7b[V_pos] = 'V'
-        V_pos = 0
+        if q.empty == True:
+            temp7b = temp6
+        else: 
+            direction = q.get()
+#            print 'chili' + direction
+            V_pos = temp7b.index('V')
+#            print 'vpos = %r' % V_pos
+            temp7b = temp6
+            if V_pos > 0 and direction == '7':
+ #               print 'read 7'
+                temp7b[V_pos-1] = 'V'
+            elif V_pos < 11 and direction == '8':
+                temp7b[V_pos+1] = 'V'
+            else:
+                temp7b[V_pos] = 'V'
+            V_pos = 0
       #  for i in range(len(temp7)):
       #      if temp7[i] == 'V':
       #          pass
@@ -100,11 +108,15 @@ def commencer(q):
         for i in next_state:
             print i
 
-
+#x = _GetchUnix()
 def movement(q):
     while True:
         x = _GetchUnix()
-        q.put(x)
+#        if x:
+#            q.put(x())
+#        else:
+#            continue
+#        x = None
  #       time.sleep(1)
 #        print "here's %s " % q.get()
 #        direction, null1, null2 = select.select([sys.stdin], [], [], 0.2)
@@ -117,7 +129,7 @@ def movement(q):
 q = Queue(maxsize=0)
 move_V = Thread(target=movement, args=(q,))
 iterate_field = Thread(target=commencer, args=(q,))
-#move_V.setDaemon(True)
+move_V.setDaemon(True)
 #iterate_field.setDaemon(True)
 move_V.start()
 iterate_field.start()
