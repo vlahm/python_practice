@@ -53,7 +53,7 @@ def initializer():
     return state0
 
     
-def commencer(q):
+def commencer():
     lines = initializer()
 #    for i in range(10):
     while True:
@@ -72,22 +72,22 @@ def commencer(q):
 
         temp6 = list(lines[3])
         temp7b = list(lines[2])
-        if q.empty == True:
-            temp7b = temp6
-        else: 
-            direction = q.get()
+#        if q.empty == True:
+#            temp7b = temp6
+#        else: 
+#            direction = q.get()
 #            print 'chili' + direction
-            V_pos = temp7b.index('V')
+#            V_pos = temp7b.index('V')
 #            print 'vpos = %r' % V_pos
-            temp7b = temp6
-            if V_pos > 0 and direction == '7':
+#            temp7b = temp6
+#            if V_pos > 0 and direction == '7':
  #               print 'read 7'
-                temp7b[V_pos-1] = 'V'
-            elif V_pos < 11 and direction == '8':
-                temp7b[V_pos+1] = 'V'
-            else:
-                temp7b[V_pos] = 'V'
-            V_pos = 0
+#                temp7b[V_pos-1] = 'V'
+#            elif V_pos < 11 and direction == '8':
+#                temp7b[V_pos+1] = 'V'
+#            else:
+#                temp7b[V_pos] = 'V'
+#            V_pos = 0
       #  for i in range(len(temp7)):
       #      if temp7[i] == 'V':
       #          pass
@@ -108,10 +108,10 @@ def commencer(q):
             print i
 
 #x = _GetchUnix()
-def movement(q):
-    while True:
-        x = _GetchUnix()
-        q.put(x())
+#def movement(q):
+#    while True:
+#        x = _GetchUnix()
+#        q.put(x())
 
 #        if x:
 #            q.put(x())
@@ -127,10 +127,11 @@ def movement(q):
 #direction <- 'd'
 #    direction <- raw_input()
 
-q = Queue(maxsize=0)
-move_V = Thread(target=movement, args=(q,))
-iterate_field = Thread(target=commencer, args=(q,))
-move_V.setDaemon(True)
-#iterate_field.setDaemon(True)
-move_V.start()
-iterate_field.start()
+commencer()
+#q = Queue(maxsize=0)
+#move_V = Thread(target=movement, args=(q,))
+#iterate_field = Thread(target=commencer, args=(q,))
+#move_V.setDaemon(True)
+##iterate_field.setDaemon(True)
+#move_V.start()
+#iterate_field.start()
