@@ -9,16 +9,19 @@ def chunks(l, n):
 class level(object):
     
     def __init__(self):
-        self.dicty = 'unwritten'
-        player = ('55', '^')
+        self.player = [55, ' ^ ']
+        keys = range(100)
+        starting_vals = np.repeat('   ', 100)
+        self.base_dicty= dict(zip(keys, starting_vals))
+        self.dicty = self.base_dicty
         
     def update_dicty(self, pos, val):
         if val == 'first':
-            keys = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
-            keys2 = [str(i) for i in range(10,100,1)]
-            keys.extend(keys2)
-            starting_vals = np.repeat('   ', 100)
-            self.dicty = dict(zip(keys, starting_vals))
+          #  keys = range(100)
+          #  starting_vals = np.repeat('   ', 100)
+          #  self.dicty = dict(zip(keys, starting_vals))
+            self.dicty[self.player[0]] = ' ^ '
+            print '3'#
             ordered = sorted(self.dicty.items())
             vals = list()
             for i in range(100):
@@ -26,7 +29,10 @@ class level(object):
             arranged = list(chunks(vals, 10))
             self.print_frame(arranged)
         else:
-            self.dicty[pos] = ' ' + val + ' '
+            print self.base_dicty[55]
+            self.dicty = self.base_dicty
+            print self.base_dicty[55]
+            self.dicty[pos] = val
             ordered = sorted(self.dicty.items())
             vals = list()
             for i in range(100):
@@ -40,21 +46,29 @@ class level(object):
             x = ''.join(data[i])#.tolist()[0])#
             print '|' + x + '|'
         print ' ' + ''.join(np.repeat('---', 10))
-        
-    def write_to_board(self, user_input):
+        print '4'#
+       
+    def process_changes(self, user_input):
         if user_input == 'first':
-            self.update_dicty('00', 'first')
-        else:
-            self.update_dicty('00', user_input)
-        # self.row = np.repeat('   ', 10)
-        # self.board = np.matrix([self.row, self.row, self.row, self.row, self.row,
-            # self.row, self.row, self.row, self.row, self.row])
+            print '2'#
+            self.update_dicty(0, 'first')
+        elif user_input == '\x1b[D':
+            print '7'#
+            next_space = self.player[0] - 1
+            if (next_space in [' o ', ' x ', ' 8 ',
+'{0}', ' | '] or self.player[1] in [' ^ ', ' v ', ' > ']):
+                self.player[1] = ' < '
+            else:
+                self.player = [next_space, ' < ']
+            self.update_dicty(self.player[0], self.player[1])
     
 x = level()
 
 def play(user_input = 'none'):
     if user_input == 'none':
-        x.write_to_board('first')
+        print '1'#
+        x.process_changes('first')
+        print '5'#
         new = raw_input('> ')
         play(user_input = new)
     elif user_input == 'q':
@@ -64,8 +78,9 @@ def play(user_input = 'none'):
         time.sleep(1)
         print 'I\'ll see you next time'
         time.sleep(1)
-    else :
-        x.write_to_board(user_input)
+    else:
+        print '6'#
+        x.process_changes(user_input)
         new = raw_input('> ')
         play(user_input = new)
 
