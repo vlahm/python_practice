@@ -1,19 +1,21 @@
 import numpy as np
 import time
+from copy import deepcopy
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
+keys = range(100)
+starting_vals = np.repeat('   ', 100)
+base_dicty = dict(zip(keys, starting_vals))
+
 class level(object):
     
     def __init__(self):
         self.player = [55, ' ^ ']
-        keys = range(100)
-        starting_vals = np.repeat('   ', 100)
-        self.base_dicty= dict(zip(keys, starting_vals))
-        self.dicty = self.base_dicty
+        self.dicty = dict(zip(keys, starting_vals))
         
     def update_dicty(self, pos, val):
         if val == 'first':
@@ -29,9 +31,7 @@ class level(object):
             arranged = list(chunks(vals, 10))
             self.print_frame(arranged)
         else:
-            print self.base_dicty[55]
-            self.dicty = self.base_dicty
-            print self.base_dicty[55]
+            self.dicty = deepcopy(base_dicty)
             self.dicty[pos] = val
             ordered = sorted(self.dicty.items())
             vals = list()
@@ -50,18 +50,25 @@ class level(object):
        
     def process_changes(self, user_input):
         if user_input == 'first':
-            print '2'#
             self.update_dicty(0, 'first')
+
         elif user_input == '\x1b[D':
-            print '7'#
             next_space = self.player[0] - 1
-            if (next_space in [' o ', ' x ', ' 8 ',
-'{0}', ' | '] or self.player[1] in [' ^ ', ' v ', ' > ']):
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', ' | '] or self.player[1] in [' ^ ', ' v ', ' > ']) or self.player[0] % 10 == 0 or self.player[0] == 0:
                 self.player[1] = ' < '
             else:
                 self.player = [next_space, ' < ']
             self.update_dicty(self.player[0], self.player[1])
-    
+
+        elif user_input == '\x1b[A':
+            next_space = self.player[0] - 10
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' v ', ' > ']) or self.player[0] < 10:
+                self.player = ' ^ '
+            else:
+                self.player = [next_space, ' ^ ']
+            self.update_dicty(self.player[0], self.player[1])
+   
+#current issue: cant go sideways then up, doesn't recognize ceiling 
 x = level()
 
 def play(user_input = 'none'):
@@ -85,6 +92,7 @@ def play(user_input = 'none'):
         play(user_input = new)
 
 play()
+
 
 
 
