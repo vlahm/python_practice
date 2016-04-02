@@ -7,6 +7,22 @@ def chunks(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
+class _GetchUnix:
+    def __init__(self):
+        import tty, sys
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(3)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+
 keys = range(100)
 starting_vals = np.repeat('   ', 100)
 base_dicty = dict(zip(keys, starting_vals))
@@ -63,12 +79,26 @@ class level(object):
         elif user_input == '\x1b[A':
             next_space = self.player[0] - 10
             if (next_space in [' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' v ', ' > ']) or self.player[0] < 10:
-                self.player = ' ^ '
+                self.player[1] = ' ^ '
             else:
                 self.player = [next_space, ' ^ ']
             self.update_dicty(self.player[0], self.player[1])
    
-#current issue: cant go sideways then up, doesn't recognize ceiling 
+        elif user_input == '\x1b[C':
+            next_space = self.player[0] + 1
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', ' | '] or self.player[1] in [' < ', ' v ', ' ^ ']) or self.player[0] % 10 == 9:
+                self.player[1] = ' > '
+            else:
+                self.player = [next_space, ' > ']
+            self.update_dicty(self.player[0], self.player[1])
+
+        elif user_input == '\x1b[B':
+            next_space = self.player[0] + 10
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' ^ ', ' > ']) or self.player[0] > 89:
+                self.player[1] = ' v '
+            else:
+                self.player = [next_space, ' v ']
+            self.update_dicty(self.player[0], self.player[1])
 x = level()
 
 def play(user_input = 'none'):
@@ -76,20 +106,25 @@ def play(user_input = 'none'):
         print '1'#
         x.process_changes('first')
         print '5'#
-        new = raw_input('> ')
-        play(user_input = new)
-    elif user_input == 'q':
+        new = _GetchUnix()
+        play(user_input = new())
+    elif user_input == 'qqq':
         print 'Running away, eh?'
         time.sleep(1) 
         print 'Coward!'
         time.sleep(1)
         print 'I\'ll see you next time'
         time.sleep(1)
-    else:
+    elif user_input in ['\x1b[A', '\x1b[B', '\x1b[C', '\x1b[D']: 
         print '6'#
         x.process_changes(user_input)
-        new = raw_input('> ')
-        play(user_input = new)
+        new = _GetchUnix()
+        play(user_input = new())
+    else:
+        print 'Arrows move, \'qqq\' quits'
+        new = _GetchUnix()
+        play(user_input = new())
+        
 
 play()
 
