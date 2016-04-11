@@ -1,6 +1,7 @@
 import numpy as np
 import time
 from copy import deepcopy
+import random
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -26,6 +27,7 @@ class _GetchUnix:
 keys = range(100)
 starting_vals = np.repeat('   ', 100)
 base_dicty = dict(zip(keys, starting_vals))
+global_updates = []
 
 class level(object):
     
@@ -33,13 +35,15 @@ class level(object):
         self.player = [55, ' ^ ']
         self.dicty = dict(zip(keys, starting_vals))
         
-    def update_dicty(self, pos, val):
+    def update_dicty(self, pos, val, other_updates=global_updates):
         if val == 'first':
           #  keys = range(100)
           #  starting_vals = np.repeat('   ', 100)
           #  self.dicty = dict(zip(keys, starting_vals))
             self.dicty[self.player[0]] = ' ^ '
             print '3'#
+            for i in range(len(other_updates)):
+                self.dicty[other_updates[0][i][0]] == other_updates[0][i][1]
             ordered = sorted(self.dicty.items())
             vals = list()
             for i in range(100):
@@ -49,6 +53,8 @@ class level(object):
         else:
             self.dicty = deepcopy(base_dicty)
             self.dicty[pos] = val
+            for i in range(len(other_updates)):
+                self.dicty[other_updates[0][i][0]] == other_updates[0][i][1]
             ordered = sorted(self.dicty.items())
             vals = list()
             for i in range(100):
@@ -99,13 +105,35 @@ class level(object):
             else:
                 self.player = [next_space, ' v ']
             self.update_dicty(self.player[0], self.player[1])
+
 x = level()
 
-def play(user_input = 'none'):
-    if user_input == 'none':
-        print '1'#
+class cobra(object):
+    
+    def __init__(self, level):
+        self.hit_points = random.randrange(9,12)
+        self.damage = range(1,3)
+        self.item_class = 1
+        
+    def populate(self, level):
+        vals = level.dicty.values()
+        keys = level.dicty.keys()
+        available_spaces = []
+        for i in range(len(vals)):
+            if vals[i] == '   ':
+                available_spaces.append(keys[i])
+        self.coords = np.random.choice(available_spaces, size=random.randrange(3,7), replace=False)
+        self.icons = np.repeat(' ~ ', len(self.coords))
+        self.updates = zip(self.coords, self.icons)
+        global_updates.append(self.updates)
+        
+test = cobra(x)
+test.populate(x)
+
+def play(user_input):
+    if user_input == 'setup':
         x.process_changes('first')
-        print '5'#
+    elif user_input == 'start':
         new = _GetchUnix()
         play(user_input = new())
     elif user_input == 'qqq':
@@ -116,7 +144,6 @@ def play(user_input = 'none'):
         print 'I\'ll see you next time'
         time.sleep(1)
     elif user_input in ['\x1b[A', '\x1b[B', '\x1b[C', '\x1b[D']: 
-        print '6'#
         x.process_changes(user_input)
         new = _GetchUnix()
         play(user_input = new())
@@ -126,7 +153,8 @@ def play(user_input = 'none'):
         play(user_input = new())
         
 
-play()
+play('setup')
+play('start')
 
 
 
