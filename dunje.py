@@ -42,8 +42,8 @@ class level(object):
           #  self.dicty = dict(zip(keys, starting_vals))
             self.dicty[self.player[0]] = ' ^ '
             print '3'#
-            for i in range(len(other_updates)):
-                self.dicty[other_updates[0][i][0]] == other_updates[0][i][1]
+            for i in range(len(other_updates[0])):
+                self.dicty[other_updates[0][i][0]] = other_updates[0][i][1]
             ordered = sorted(self.dicty.items())
             vals = list()
             for i in range(100):
@@ -53,8 +53,8 @@ class level(object):
         else:
             self.dicty = deepcopy(base_dicty)
             self.dicty[pos] = val
-            for i in range(len(other_updates)):
-                self.dicty[other_updates[0][i][0]] == other_updates[0][i][1]
+            for i in range(len(other_updates[0])):
+                self.dicty[other_updates[0][i][0]] = other_updates[0][i][1]
             ordered = sorted(self.dicty.items())
             vals = list()
             for i in range(100):
