@@ -23,6 +23,30 @@ class _GetchUnix:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
 
+rows = range(10)
+cols = range(10)
+tups = zip(np.repeat(rows,10),cols*10)
+catalog = zip(tups,np.repeat('   ',100))
+
+class level(object):
+    def populate(self,catalog):
+        coords = [catalog[x][0] for x in range(100)]
+        entities = [catalog[x][1] for x in range(100)]
+
+        available_spaces = []
+        for i in range(len(vals)):
+            if vals[i] == '   ':
+                available_spaces.append(keys[i])
+        self.coords = np.random.choice(available_spaces, size=random.randrange(3,7), replace=False)
+        self.icons = np.repeat(' ~ ', len(self.coords))
+        self.updates = zip(self.coords, self.icons)
+        global_updates.append(self.updates)
+
+
+
+
+
+
 
 keys = range(100)
 starting_vals = np.repeat('   ', 100)
@@ -76,7 +100,7 @@ class level(object):
 
         elif user_input == '\x1b[D':
             next_space = self.player[0] - 1
-            if (next_space in ['~', ' o ', ' x ', ' 8 ', '{0}', ' | '] or self.player[1] in [' ^ ', ' v ', ' > ']) or self.player[0] % 10 == 0 or self.player[0] == 0:
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', ' | '] or self.player[1] in [' ^ ', ' v ', ' > ']) or self.player[0] % 10 == 0 or self.player[0] == 0:
                 self.player[1] = ' < '
             else:
                 self.player = [next_space, ' < ']
@@ -84,7 +108,7 @@ class level(object):
 
         elif user_input == '\x1b[A':
             next_space = self.player[0] - 10
-            if (next_space in ['~', ' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' v ', ' > ']) or self.player[0] < 10:
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' v ', ' > ']) or self.player[0] < 10:
                 self.player[1] = ' ^ '
             else:
                 self.player = [next_space, ' ^ ']
@@ -92,7 +116,7 @@ class level(object):
    
         elif user_input == '\x1b[C':
             next_space = self.player[0] + 1
-            if (next_space in ['~', ' o ', ' x ', ' 8 ', '{0}', ' | '] or self.player[1] in [' < ', ' v ', ' ^ ']) or self.player[0] % 10 == 9:
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', ' | '] or self.player[1] in [' < ', ' v ', ' ^ ']) or self.player[0] % 10 == 9:
                 self.player[1] = ' > '
             else:
                 self.player = [next_space, ' > ']
@@ -100,7 +124,7 @@ class level(object):
 
         elif user_input == '\x1b[B':
             next_space = self.player[0] + 10
-            if (next_space in ['~', ' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' ^ ', ' > ']) or self.player[0] > 89:
+            if (next_space in [' o ', ' x ', ' 8 ', '{0}', '---'] or self.player[1] in [' < ', ' ^ ', ' > ']) or self.player[0] > 89:
                 self.player[1] = ' v '
             else:
                 self.player = [next_space, ' v ']
@@ -126,9 +150,6 @@ class cobra(object):
         self.icons = np.repeat(' ~ ', len(self.coords))
         self.updates = zip(self.coords, self.icons)
         global_updates.append(self.updates)
-
-    def battle(self, level):
-        if level
         
 test = cobra(x)
 test.populate(x)
